@@ -111,7 +111,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// Returns null if the PQ is empty.
 	@Override
 	public E peek() {
-		// TODO Auto-generated method stub
+		if (this.isEmpty())
+			return null;
 		return (E) this.storage[0].data;
 	}
 
