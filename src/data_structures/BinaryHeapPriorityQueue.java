@@ -3,6 +3,18 @@ package data_structures;
 import java.util.Iterator;
 
 public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements PriorityQueue<E> {
+	private E[] storage;
+	
+	// Default constructor
+	BinaryHeapPriorityQueue() {
+		this(DEFAULT_MAX_CAPACITY);
+	}
+	
+	// Custom constructor - no checks on size
+	@SuppressWarnings("unchecked")
+	BinaryHeapPriorityQueue(int requestedSize) {
+		storage = (E[]) new Comparable[requestedSize];
+	}
 
 	// Inserts a new object into the priority queue. Returns true if
 	// the insertion is successful. If the PQ is full, the insertion
