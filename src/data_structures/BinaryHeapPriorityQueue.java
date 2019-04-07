@@ -1,6 +1,10 @@
 package data_structures;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import data_structures.ArrayLinearList.IteratorHelper;
 
 public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements PriorityQueue<E> {
 	private E[] storage;
@@ -93,8 +97,40 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// order.
 	@Override
 	public Iterator<E> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		return new IteratorHelper();
 	}
 
+	// IteratorHelper class allows for tracking of changes since Iterator creation.
+	// Operates in fail-fast mode.
+	private class IteratorHelper implements Iterator<E> {
+		private int iterIndex;
+		private long stateCheck;
+
+		public IteratorHelper() {
+			this.iterIndex = 0;
+			this.stateCheck = modificationCounter;
+		}
+
+		// Returns true if the list has a next item, false if not
+		@Override
+		public boolean hasNext() {
+			if (this.stateCheck != modificationCounter)
+				throw new ConcurrentModificationException();
+			return false;
+		}
+
+		// If the list has a next item, that item is returned
+		@Override
+		public E next() {
+			if (!hasNext())
+				throw new NoSuchElementException();
+			return null;
+		}
+
+		// Unsupported operation for fail-fast iterator
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+	}
 }
