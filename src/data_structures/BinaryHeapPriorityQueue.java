@@ -77,6 +77,18 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		this.storage[newIndex] = newValue;
 	}
 
+	private void trickleDown() {
+		int current = 0;
+		int child = getNextChild(current);
+		
+	}
+	
+	private int getNextChild(int currentIndex) {
+		int left = 2 * currentIndex + 1;
+		int right = left + 1;
+		return 0;
+	}
+	
 	// Inserts a new object into the priority queue. Returns true if
 	// the insertion is successful. If the PQ is full, the insertion
 	// is aborted, and the method returns false.
