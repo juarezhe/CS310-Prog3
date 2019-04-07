@@ -19,6 +19,12 @@ public class H_Driver {
 		System.out.println("Peek:\t" + priorityQueue.peek());
 		System.out.println();
 		addPokemon(3);
+		priorityQueue.remove();
+		for (Object curr : priorityQueue) {
+			// System.out.println(curr.toString());
+			System.out.println(curr);
+		}
+		System.out.println();
 		System.out.println("Size:\t" + priorityQueue.size());
 		System.out.println("Empty:\t" + priorityQueue.isEmpty());
 		System.out.println("Full:\t" + priorityQueue.isFull());

@@ -122,8 +122,12 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// PQ the longest, and returns it. Returns null if the PQ is empty.
 	@Override
 	public E remove() {
-		// TODO Auto-generated method stub
-		return null;
+		E itemToReturn = this.storage[0].data;
+		
+		this.storage[0] = this.storage[this.currentSize - 1];
+		this.currentSize--;
+		trickleDown();		
+		return (E) itemToReturn;
 	}
 
 	// Deletes all instances of the parameter obj from the PQ if found, and
