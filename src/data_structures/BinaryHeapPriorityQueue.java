@@ -182,8 +182,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		public E next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			// return (E) storage[this.iterIndex++].data;
-			return (E) storage[this.iterIndex++];
+			return (E) storage[this.iterIndex++].data;
+			// return (E) storage[this.iterIndex++];
 		}
 
 		// Unsupported operation for fail-fast iterator
