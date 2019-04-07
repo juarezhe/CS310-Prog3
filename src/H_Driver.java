@@ -20,7 +20,7 @@ public class H_Driver {
 		System.out.println("Peek:\t" + priorityQueue.peek());
 		System.out.println();
 		addPokemon(3);
-		emptyWithRemove();
+		//emptyWithRemove();
 		System.out.println("Size:\t" + priorityQueue.size());
 		System.out.println("Empty:\t" + priorityQueue.isEmpty());
 		System.out.println("Full:\t" + priorityQueue.isFull());
@@ -56,5 +56,9 @@ public class H_Driver {
 			}
 			System.out.println();
 		}
+	}
+	
+	public static void deleteTest() {
+		
 	}
 }

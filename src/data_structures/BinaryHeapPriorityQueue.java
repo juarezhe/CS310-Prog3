@@ -77,8 +77,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		}
 	}
 
-	private void trickleDown() {
-		int currentIndex = 0;
+	private void trickleDown(int startingIndex) {
+		int currentIndex = startingIndex;
 		int smallestChildIndex = getSmallestChild(currentIndex);
 		Wrapper<E> valueToSort = this.storage[currentIndex];
 
@@ -118,26 +118,57 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		return true;
 	}
 
-	// Removes the object of highest priority that has been in the
-	// PQ the longest, and returns it. Returns null if the PQ is empty.
+	// Public remove - checks for emptiness before calling private remove for
+	// index 0
 	@Override
 	public E remove() {
 		if (this.isEmpty())
 			return null;
-		E itemToReturn = this.storage[0].data;
+		return remove(0);
+	}
 
-		this.storage[0] = this.storage[this.currentSize - 1];
+	// Removes the object of highest priority that has been in the
+	// PQ the longest, and returns it. Returns null if the PQ is empty.
+	private E remove(int index) {
+		E itemToReturn = this.storage[index].data;
+
+		this.storage[index] = this.storage[this.currentSize - 1];
 		this.modificationCounter++;
 		this.currentSize--;
-		trickleDown();
+		trickleDown(index);
 		return (E) itemToReturn;
+	}
+
+	// Public delete - checks for emptiness before calling private
+	// delete method starting at index 0
+	@Override
+	public boolean delete(E obj) {
+		if (this.isEmpty())
+			return false;
+		return delete(obj, 0);
 	}
 
 	// Deletes all instances of the parameter obj from the PQ if found, and
 	// returns true. Returns false if no match to the parameter obj is found.
-	@Override
-	public boolean delete(E obj) {
-		// TODO Auto-generated method stub
+	private boolean delete(E obj, int idx) {
+		boolean isDeleted = false;
+		int currentIndex = idx;
+
+		while (currentIndex < this.currentSize) {
+			if (obj.compareTo(this.storage[currentIndex].data) == -1)
+				return false;
+			if (obj.compareTo(this.storage[currentIndex].data) == 0) {
+				remove(currentIndex);
+				isDeleted = true;
+			}
+			if (obj.compareTo(this.storage[currentIndex].data) == 1) {
+				delete(obj, 2 * currentIndex + 1);
+				delete(obj, 2 * currentIndex + 2);
+			}
+			currentIndex++;
+		}
+		if (isDeleted)
+			return true;
 		return false;
 	}
 
