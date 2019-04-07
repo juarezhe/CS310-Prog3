@@ -4,23 +4,22 @@ import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import data_structures.ArrayLinearList.IteratorHelper;
-
 public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements PriorityQueue<E> {
 	private E[] storage;
 	private int currentSize;
 	private long modificationCounter;
-	
+
 	// Default constructor
 	BinaryHeapPriorityQueue() {
 		this(DEFAULT_MAX_CAPACITY);
 	}
-	
+
 	// Custom constructor - no checks on size
 	@SuppressWarnings("unchecked")
 	BinaryHeapPriorityQueue(int requestedMaxSize) {
 		this.storage = (E[]) new Comparable[requestedMaxSize];
 		this.currentSize = 0;
+		this.modificationCounter = 0;
 	}
 
 	// Inserts a new object into the priority queue. Returns true if
@@ -89,8 +88,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// implementations should always return false.
 	@Override
 	public boolean isFull() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.currentSize == this.storage.length;
 	}
 
 	// Returns an iterator of the objects in the PQ, in no particular
