@@ -79,15 +79,15 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 
 	private void trickleDown() {
 		int currentIndex = 0;
-		int childIndex = getSmallestChild(currentIndex);
-		
-		while (childIndex != -1 && this.storage[currentIndex].compareTo(this.storage[childIndex]) < 0
-				&& this.storage[childIndex].compareTo(this.storage[this.currentSize - 1]) < 0) {
-			this.storage[currentIndex] = this.storage[childIndex];
-			currentIndex = childIndex;
-			childIndex = getSmallestChild(currentIndex);
+		int smallestChildIndex = getSmallestChild(currentIndex);
+		Wrapper<E> valueToSort = this.storage[currentIndex];
+
+		while (smallestChildIndex != -1 && valueToSort.compareTo(this.storage[smallestChildIndex]) > 0) {
+			this.storage[currentIndex] = this.storage[smallestChildIndex];
+			currentIndex = smallestChildIndex;
+			this.storage[currentIndex] = valueToSort;
+			smallestChildIndex = getSmallestChild(currentIndex);
 		}
-		this.storage[currentIndex] = this.storage[this.currentSize - 1];
 	}
 
 	// Returns the index of the smallest child or -1 if no children
@@ -122,11 +122,14 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// PQ the longest, and returns it. Returns null if the PQ is empty.
 	@Override
 	public E remove() {
+		if (this.isEmpty())
+			return null;
 		E itemToReturn = this.storage[0].data;
-		
+
 		this.storage[0] = this.storage[this.currentSize - 1];
+		this.modificationCounter++;
 		this.currentSize--;
-		trickleDown();		
+		trickleDown();
 		return (E) itemToReturn;
 	}
 
@@ -214,8 +217,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		public E next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			return (E) storage[this.iterIndex++].data;
-			// return (E) storage[this.iterIndex++];
+			// return (E) storage[this.iterIndex++].data;
+			return (E) storage[this.iterIndex++];
 		}
 
 		// Unsupported operation for fail-fast iterator
