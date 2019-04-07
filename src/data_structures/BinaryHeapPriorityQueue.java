@@ -112,7 +112,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	@Override
 	public E peek() {
 		// TODO Auto-generated method stub
-		return null;
+		return (E) this.storage[0].data;
 	}
 
 	// Returns true if the priority queue contains the specified element
