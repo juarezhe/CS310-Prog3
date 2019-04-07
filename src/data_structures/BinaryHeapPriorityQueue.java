@@ -114,7 +114,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		public boolean hasNext() {
 			if (this.stateCheck != modificationCounter)
 				throw new ConcurrentModificationException();
-			return false;
+			return this.iterIndex < currentSize;
 		}
 
 		// If the list has a next item, that item is returned
