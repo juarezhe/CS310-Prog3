@@ -40,7 +40,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 				return (int) (this.number - o.number);
 			return ((Comparable<T>) this.data).compareTo(o.data);
 		}
-		
+
 		@Override
 		public String toString() {
 			return this.number + " " + this.data.toString();
@@ -63,32 +63,48 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		this.modificationCounter = this.entryNumber = 0;
 		this.currentSize = 0;
 	}
-	
+
 	private void trickleUp() {
 		int newIndex = this.currentSize - 1;
 		int parentIndex = (newIndex - 1) / 2;
 		Wrapper<E> newValue = this.storage[newIndex];
-		
-		while (parentIndex != newIndex && parentIndex >= 0 && newValue.compareTo(this.storage[parentIndex]) < 0) {
+
+		while (parentIndex >= 0 && newValue.compareTo(this.storage[parentIndex]) < 0) {
 			this.storage[newIndex] = this.storage[parentIndex];
 			newIndex = parentIndex;
+			this.storage[newIndex] = newValue;
 			parentIndex = (parentIndex - 1) / 2;
 		}
-		this.storage[newIndex] = newValue;
 	}
 
 	private void trickleDown() {
-		int current = 0;
-		int child = getNextChild(current);
+		int currentIndex = 0;
+		int childIndex = getSmallestChild(currentIndex);
 		
+		while (childIndex != -1 && this.storage[currentIndex].compareTo(this.storage[childIndex]) < 0
+				&& this.storage[childIndex].compareTo(this.storage[this.currentSize - 1]) < 0) {
+			this.storage[currentIndex] = this.storage[childIndex];
+			currentIndex = childIndex;
+			childIndex = getSmallestChild(currentIndex);
+		}
+		this.storage[currentIndex] = this.storage[this.currentSize - 1];
 	}
-	
-	private int getNextChild(int currentIndex) {
-		int left = 2 * currentIndex + 1;
-		int right = left + 1;
-		return 0;
+
+	// Returns the index of the smallest child or -1 if no children
+	private int getSmallestChild(int parentIndex) {
+		int leftChild = 2 * parentIndex + 1;
+		int rightChild = leftChild + 1;
+
+		if (rightChild < this.currentSize) { // two children
+			if (this.storage[leftChild].compareTo(storage[rightChild]) < 0)
+				return leftChild; // left child is smaller
+			return rightChild; // right child is smaller
+		}
+		if (leftChild < this.currentSize) // one child
+			return leftChild;
+		return -1; // no children
 	}
-	
+
 	// Inserts a new object into the priority queue. Returns true if
 	// the insertion is successful. If the PQ is full, the insertion
 	// is aborted, and the method returns false.
