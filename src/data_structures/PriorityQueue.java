@@ -1,6 +1,8 @@
 /* 
- * Hannah Juarez
- * cssc1481
+ * Program 3 - binary heap priority queue
+ * CS-310
+ * 8 April 2019
+ * @author Hannah Juarez cssc1481
  */
 
 /*

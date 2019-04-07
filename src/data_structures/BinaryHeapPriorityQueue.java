@@ -1,6 +1,8 @@
 /* 
- * Hannah Juarez
- * cssc1481
+ * Program 3 - binary heap priority queue
+ * CS-310
+ * 8 April 2019
+ * @author Hannah Juarez cssc1481
  */
 
 /*
@@ -23,38 +25,56 @@ import java.util.NoSuchElementException;
 
 public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements PriorityQueue<E> {
 
-	private class Wrapper<E extends Comparable<E>> implements Comparable<Wrapper<E>> {
+	private class Wrapper<T extends Comparable<T>> implements Comparable<Wrapper<T>> {
 		private long number;
-		private E data;
+		private T data;
 
-		public Wrapper(E obj) {
+		public Wrapper(T obj) {
 			this.number = entryNumber++;
 			this.data = obj;
 		}
 
 		@Override
-		public int compareTo(Wrapper<E> o) {
-			if (((Comparable<E>) this.data).compareTo(o.data) == 0)
+		public int compareTo(Wrapper<T> o) {
+			if (((Comparable<T>) this.data).compareTo(o.data) == 0)
 				return (int) (this.number - o.number);
-			return ((Comparable<E>) this.data).compareTo(o.data);
+			return ((Comparable<T>) this.data).compareTo(o.data);
+		}
+		
+		@Override
+		public String toString() {
+			return this.number + " " + this.data.toString();
 		}
 	}
 
-	private E[] storage;
+	private Wrapper<E>[] storage;
 	private int currentSize;
 	private long modificationCounter, entryNumber;
 
 	// Default constructor
-	BinaryHeapPriorityQueue() {
+	public BinaryHeapPriorityQueue() {
 		this(DEFAULT_MAX_CAPACITY);
 	}
 
 	// Custom constructor - no checks on requested max size
 	@SuppressWarnings("unchecked")
-	BinaryHeapPriorityQueue(int requestedMaxSize) {
-		this.storage = (E[]) new Comparable[requestedMaxSize];
+	public BinaryHeapPriorityQueue(int requestedMaxSize) {
+		this.storage = new Wrapper[requestedMaxSize];
 		this.modificationCounter = this.entryNumber = 0;
 		this.currentSize = 0;
+	}
+	
+	private void trickleUp() {
+		int newIndex = this.currentSize - 1;
+		int parentIndex = (newIndex - 1) / 2;
+		Wrapper<E> newValue = this.storage[newIndex];
+		
+		while (parentIndex != newIndex && parentIndex >= 0 && newValue.compareTo(this.storage[parentIndex]) < 0) {
+			this.storage[newIndex] = this.storage[parentIndex];
+			newIndex = parentIndex;
+			parentIndex = (parentIndex - 1) / 2;
+		}
+		this.storage[newIndex] = newValue;
 	}
 
 	// Inserts a new object into the priority queue. Returns true if
@@ -64,7 +84,9 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	public boolean insert(E object) {
 		if (this.isFull())
 			return false;
-		this.storage[++this.currentSize] = (E) new Wrapper(object);
+		this.storage[this.currentSize++] = new Wrapper<E>(object);
+		this.modificationCounter++;
+		trickleUp();
 		return true;
 	}
 
@@ -110,7 +132,9 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// Returns the PQ to an empty state.
 	@Override
 	public void clear() {
-		// TODO Auto-generated method stub
+		this.entryNumber = 0;
+		this.currentSize = 0;
+		this.modificationCounter++;
 	}
 
 	// Returns true if the PQ is empty, otherwise false
@@ -157,7 +181,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		public E next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			return null;
+			// return (E) storage[this.iterIndex++].data;
+			return (E) storage[this.iterIndex++];
 		}
 
 		// Unsupported operation for fail-fast iterator
