@@ -1,3 +1,20 @@
+/* 
+ * Hannah Juarez
+ * cssc1481
+ */
+
+/*
+ * The PriorityQueue ADT may store objects in any order. However,
+ * removal of objects from the PQ must follow specific criteria.
+ * The object of highest priority that has been in the PQ longest
+ * must be the object returned by the remove() method. FIFO return
+ * order must be preserved for objects of identical priority.
+ * 
+ * Ranking of objects by priority is determined by the Comparable<E>
+ * interface. All objects inserted into the PQ must implement this
+ * interface.
+ */
+
 package data_structures;
 
 import java.util.ConcurrentModificationException;
@@ -5,21 +22,39 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements PriorityQueue<E> {
+
+	private class Wrapper<E extends Comparable<E>> implements Comparable<Wrapper<E>> {
+		private long number;
+		private E data;
+
+		public Wrapper(E obj) {
+			this.number = entryNumber++;
+			this.data = obj;
+		}
+
+		@Override
+		public int compareTo(Wrapper<E> o) {
+			if (((Comparable<E>) this.data).compareTo(o.data) == 0)
+				return (int) (this.number - o.number);
+			return ((Comparable<E>) this.data).compareTo(o.data);
+		}
+	}
+
 	private E[] storage;
 	private int currentSize;
-	private long modificationCounter;
+	private long modificationCounter, entryNumber;
 
 	// Default constructor
 	BinaryHeapPriorityQueue() {
 		this(DEFAULT_MAX_CAPACITY);
 	}
 
-	// Custom constructor - no checks on size
+	// Custom constructor - no checks on requested max size
 	@SuppressWarnings("unchecked")
 	BinaryHeapPriorityQueue(int requestedMaxSize) {
 		this.storage = (E[]) new Comparable[requestedMaxSize];
+		this.modificationCounter = this.entryNumber = 0;
 		this.currentSize = 0;
-		this.modificationCounter = 0;
 	}
 
 	// Inserts a new object into the priority queue. Returns true if
@@ -27,8 +62,10 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// is aborted, and the method returns false.
 	@Override
 	public boolean insert(E object) {
-		// TODO Auto-generated method stub
-		return false;
+		if (this.isFull())
+			return false;
+		this.storage[++this.currentSize] = (E) new Wrapper(object);
+		return true;
 	}
 
 	// Removes the object of highest priority that has been in the
@@ -74,14 +111,12 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	@Override
 	public void clear() {
 		// TODO Auto-generated method stub
-
 	}
 
 	// Returns true if the PQ is empty, otherwise false
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.currentSize == 0;
 	}
 
 	// Returns true if the PQ is full, otherwise false. List based
