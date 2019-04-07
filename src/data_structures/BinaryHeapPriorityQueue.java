@@ -4,6 +4,8 @@ import java.util.Iterator;
 
 public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements PriorityQueue<E> {
 	private E[] storage;
+	private int currentSize;
+	private long modificationCounter;
 	
 	// Default constructor
 	BinaryHeapPriorityQueue() {
@@ -12,8 +14,9 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	
 	// Custom constructor - no checks on size
 	@SuppressWarnings("unchecked")
-	BinaryHeapPriorityQueue(int requestedSize) {
-		storage = (E[]) new Comparable[requestedSize];
+	BinaryHeapPriorityQueue(int requestedMaxSize) {
+		this.storage = (E[]) new Comparable[requestedMaxSize];
+		this.currentSize = 0;
 	}
 
 	// Inserts a new object into the priority queue. Returns true if
@@ -61,8 +64,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// Returns the number of objects currently in the PQ.
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.currentSize;
 	}
 
 	// Returns the PQ to an empty state.
