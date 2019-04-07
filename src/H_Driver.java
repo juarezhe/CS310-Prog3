@@ -7,33 +7,29 @@ public class H_Driver {
 	public static void main(String[] args) {
 		priorityQueue = new BinaryHeapPriorityQueue<Pokemon>(LIST_SIZE);
 
-		System.out.println("Size:\t" + priorityQueue.size());
-		System.out.println("Empty:\t" + priorityQueue.isEmpty());
-		System.out.println("Full:\t" + priorityQueue.isFull());
-		System.out.println("Peek:\t" + priorityQueue.peek());
+		printStuff();
 		System.out.println("Remove:\t" + priorityQueue.remove());
 		System.out.println();
 		addPokemon(9);
-		System.out.println("Size:\t" + priorityQueue.size());
-		System.out.println("Empty:\t" + priorityQueue.isEmpty());
-		System.out.println("Full:\t" + priorityQueue.isFull());
-		System.out.println("Peek:\t" + priorityQueue.peek());
+		printStuff();
 		System.out.println();
 		addPokemon(3);
+		deleteTest(2);
 		//emptyWithRemove();
-		System.out.println("Size:\t" + priorityQueue.size());
-		System.out.println("Empty:\t" + priorityQueue.isEmpty());
-		System.out.println("Full:\t" + priorityQueue.isFull());
-		System.out.println("Peek:\t" + priorityQueue.peek());
+		printStuff();
 		System.out.println("Remove:\t" + priorityQueue.remove());
 		System.out.println();
 		addPokemon(3);
 		priorityQueue.clear();
+		printStuff();
+		System.out.println("Remove:\t" + priorityQueue.remove());
+	}
+	
+	public static void printStuff() {
 		System.out.println("Size:\t" + priorityQueue.size());
 		System.out.println("Empty:\t" + priorityQueue.isEmpty());
 		System.out.println("Full:\t" + priorityQueue.isFull());
 		System.out.println("Peek:\t" + priorityQueue.peek());
-		System.out.println("Remove:\t" + priorityQueue.remove());
 	}
 
 	public static void addPokemon(int n) {
@@ -58,7 +54,21 @@ public class H_Driver {
 		}
 	}
 	
-	public static void deleteTest() {
-		
+	public static void deleteTest(int num) {
+		System.out.println("Delete:\t" + priorityQueue.delete(new Pokemon(num)));
+		for (Object curr : priorityQueue) {
+			System.out.println(curr.toString());
+			// System.out.println(curr);
+		}
+		System.out.println();
+	}
+	
+	public static void deleteTest(String name) {
+		System.out.println("Delete:\t" + priorityQueue.delete(new Pokemon(name)));
+		for (Object curr : priorityQueue) {
+			System.out.println(curr.toString());
+			// System.out.println(curr);
+		}
+		System.out.println();
 	}
 }

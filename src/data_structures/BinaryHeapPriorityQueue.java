@@ -152,24 +152,24 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// returns true. Returns false if no match to the parameter obj is found.
 	private boolean delete(E obj, int idx) {
 		boolean isDeleted = false;
-		int currentIndex = idx;
+		int compareResults = obj.compareTo(this.storage[idx].data);
 
-		while (currentIndex < this.currentSize) {
-			if (obj.compareTo(this.storage[currentIndex].data) == -1)
-				return false;
-			if (obj.compareTo(this.storage[currentIndex].data) == 0) {
-				remove(currentIndex);
-				isDeleted = true;
-			}
-			if (obj.compareTo(this.storage[currentIndex].data) == 1) {
-				delete(obj, 2 * currentIndex + 1);
-				delete(obj, 2 * currentIndex + 2);
-			}
-			currentIndex++;
+		if (compareResults == -1)
+			return isDeleted;
+		if (compareResults == 0) {
+			isDeleted = remove(idx) != null || isDeleted ? true : false;
+			isDeleted = delete(obj, idx) || isDeleted ? true : false;
 		}
-		if (isDeleted)
-			return true;
-		return false;
+		if (compareResults == 1) {
+			int leftChild = 2 * idx + 1;
+			int rightChild = leftChild + 1;
+			
+			if (rightChild < this.currentSize)
+				isDeleted = delete(obj, rightChild) || isDeleted ? true : false;
+			if (leftChild < this.currentSize)
+				isDeleted = delete(obj, leftChild) || isDeleted ? true : false;
+		}
+		return isDeleted;
 	}
 
 	// Returns the object of highest priority that has been in the
