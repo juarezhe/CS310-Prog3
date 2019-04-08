@@ -257,11 +257,22 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	private class IteratorHelper implements Iterator<E> {
 		private int iterIndex;
 		private long stateCheck;
+		// private Wrapper<E>[] auxiliary;
 
+		// @SuppressWarnings("unchecked")
 		public IteratorHelper() {
 			this.iterIndex = 0;
 			this.stateCheck = modificationCounter;
+			// this.auxiliary = new Wrapper[currentSize];
+			// sortToAux(0);
 		}
+		/**
+		private void sortToAux(int idx) {
+			this.auxiliary[idx] = storage[idx];
+			
+			int leftCompare = storage[idx].compareTo(storage[2 * idx + 1]);
+			int rightCompare = storage[idx].compareTo(storage[2 * idx + 2]);
+		}**/
 
 		// Returns true if the list has a next item, false if not
 		@Override
