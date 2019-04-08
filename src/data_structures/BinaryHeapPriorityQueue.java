@@ -1,5 +1,10 @@
 /* 
- * Program 3 - binary heap priority queue
+ * Program 3 - Binary min-heap priority queue
+ * Uses an array for its behind-the-scenes storage
+ * Does not resize when nearing or at max size
+ * 
+ * Contains code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
+ * 
  * CS-310
  * 8 April 2019
  * @author Hannah Juarez cssc1481
@@ -59,6 +64,9 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		this.currentSize = 0;
 	}
 
+	// Maintains min-heap order by sorting elements that have higher priority and
+	// longer time in the queue toward the front
+	// Code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
 	private void trickleUp() {
 		int newIndex = this.currentSize - 1;
 		int parentIndex = (newIndex - 1) / 2;
@@ -72,6 +80,9 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		}
 	}
 
+	// Maintains min-heap order by sorting the replacement element toward the back
+	// based on priority and time in queue
+	// Code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
 	private void trickleDown(int startingIndex) {
 		int currentIndex = startingIndex;
 		int smallestChildIndex = getSmallestChild(currentIndex);
@@ -86,6 +97,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	}
 
 	// Returns the index of the smallest child or -1 if no children
+	// Code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
 	private int getSmallestChild(int parentIndex) {
 		int leftChild = 2 * parentIndex + 1;
 		int rightChild = leftChild + 1;
@@ -113,8 +125,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		return true;
 	}
 
-	// Public remove - checks for emptiness before calling private remove for
-	// index 0
+	// Public version - checks for emptiness before calling private version at index
+	// 0; returns results from private version
 	@Override
 	public E remove() {
 		if (this.isEmpty())
@@ -134,8 +146,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		return (E) itemToReturn;
 	}
 
-	// Public delete - checks for emptiness before calling private
-	// delete method starting at index 0
+	// Public version - checks for emptiness before calling private version starting
+	// at index 0; returns results from private version
 	@Override
 	public boolean delete(E obj) {
 		if (this.isEmpty())
@@ -176,8 +188,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		return (E) this.storage[0].data;
 	}
 
-	// Returns true if the priority queue contains the specified element
-	// false otherwise.
+	// Public version - checks for emptiness before calling private version at index
+	// 0; returns results from private version
 	@Override
 	public boolean contains(E obj) {
 		if (this.isEmpty())
@@ -185,6 +197,8 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		return contains(obj, 0);
 	}
 
+	// Returns true if the priority queue contains the specified element
+	// false otherwise.
 	private boolean contains(E obj, int idx) {
 		boolean isFound = false;
 		int compareResults = obj.compareTo(this.storage[idx].data);
@@ -196,7 +210,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		}
 		int leftChild = 2 * idx + 1;
 		int rightChild = leftChild + 1;
-		
+
 		if (rightChild < this.currentSize)
 			isFound = contains(obj, rightChild) || isFound ? true : false;
 		if (leftChild < this.currentSize)
