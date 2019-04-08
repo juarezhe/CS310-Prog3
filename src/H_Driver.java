@@ -11,8 +11,6 @@ public class H_Driver {
 		System.out.println("Remove:\t" + priorityQueue.remove());
 		System.out.println();
 		addPokemon(9);
-		printStuff();
-		System.out.println();
 		addPokemon(3);
 		deleteTest(2);
 		//emptyWithRemove();
@@ -30,6 +28,7 @@ public class H_Driver {
 		System.out.println("Empty:\t" + priorityQueue.isEmpty());
 		System.out.println("Full:\t" + priorityQueue.isFull());
 		System.out.println("Peek:\t" + priorityQueue.peek());
+		System.out.println("Contain:" + priorityQueue.contains(new Pokemon(1)));
 	}
 
 	public static void addPokemon(int n) {
@@ -55,6 +54,7 @@ public class H_Driver {
 	}
 	
 	public static void deleteTest(int num) {
+		System.out.println("Contain:" + priorityQueue.contains(new Pokemon(num)));
 		System.out.println("Delete:\t" + priorityQueue.delete(new Pokemon(num)));
 		for (Object curr : priorityQueue) {
 			System.out.println(curr.toString());
@@ -64,6 +64,7 @@ public class H_Driver {
 	}
 	
 	public static void deleteTest(String name) {
+		System.out.println("Contain:" + priorityQueue.contains(new Pokemon(name)));
 		System.out.println("Delete:\t" + priorityQueue.delete(new Pokemon(name)));
 		for (Object curr : priorityQueue) {
 			System.out.println(curr.toString());

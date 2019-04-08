@@ -40,11 +40,6 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 				return (int) (this.number - o.number);
 			return ((Comparable<T>) this.data).compareTo(o.data);
 		}
-
-		@Override
-		public String toString() {
-			return this.number + " " + this.data.toString();
-		}
 	}
 
 	private Wrapper<E>[] storage;
@@ -154,21 +149,20 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		boolean isDeleted = false;
 		int compareResults = obj.compareTo(this.storage[idx].data);
 
-		if (compareResults == -1)
-			return isDeleted;
+		if (compareResults < 0)
+			return false;
 		if (compareResults == 0) {
-			isDeleted = remove(idx) != null || isDeleted ? true : false;
-			isDeleted = delete(obj, idx) || isDeleted ? true : false;
+			remove(idx);
+			delete(obj, idx);
+			return true;
 		}
-		if (compareResults == 1) {
-			int leftChild = 2 * idx + 1;
-			int rightChild = leftChild + 1;
-			
-			if (rightChild < this.currentSize)
-				isDeleted = delete(obj, rightChild) || isDeleted ? true : false;
-			if (leftChild < this.currentSize)
-				isDeleted = delete(obj, leftChild) || isDeleted ? true : false;
-		}
+		int leftChild = 2 * idx + 1;
+		int rightChild = leftChild + 1;
+
+		if (rightChild < this.currentSize)
+			isDeleted = delete(obj, rightChild) || isDeleted ? true : false;
+		if (leftChild < this.currentSize)
+			isDeleted = delete(obj, leftChild) || isDeleted ? true : false;
 		return isDeleted;
 	}
 
@@ -186,8 +180,28 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// false otherwise.
 	@Override
 	public boolean contains(E obj) {
-		// TODO Auto-generated method stub
-		return false;
+		if (this.isEmpty())
+			return false;
+		return contains(obj, 0);
+	}
+
+	private boolean contains(E obj, int idx) {
+		boolean isFound = false;
+		int compareResults = obj.compareTo(this.storage[idx].data);
+
+		if (compareResults < 0)
+			return false;
+		if (compareResults == 0) {
+			return true;
+		}
+		int leftChild = 2 * idx + 1;
+		int rightChild = leftChild + 1;
+		
+		if (rightChild < this.currentSize)
+			isFound = contains(obj, rightChild) || isFound ? true : false;
+		if (leftChild < this.currentSize)
+			isFound = contains(obj, leftChild) || isFound ? true : false;
+		return isFound;
 	}
 
 	// Returns the number of objects currently in the PQ.
@@ -248,8 +262,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		public E next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			// return (E) storage[this.iterIndex++].data;
-			return (E) storage[this.iterIndex++];
+			return (E) storage[this.iterIndex++].data;
 		}
 
 		// Unsupported operation for fail-fast iterator
