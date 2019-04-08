@@ -1,4 +1,3 @@
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class Pokemon implements Comparable<Pokemon> {

@@ -877,6 +877,10 @@ public class Driver {
 	}
 
 	public static void main(String[] args) {
+		long startTime = System.nanoTime();
 		new Driver();
+		long endTime   = System.nanoTime();
+		long totalTime = endTime - startTime;
+		System.out.println("Runtime: " + totalTime / 1000000);
 	}
 }
