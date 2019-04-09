@@ -48,6 +48,7 @@ public class H_Driver {
 		System.out.println("Empty:\t" + priorityQueue.isEmpty());
 		System.out.println("Full:\t" + priorityQueue.isFull());
 		System.out.println("Peek:\t" + priorityQueue.peek());
+		System.out.println();
 	}
 
 	public static void insertSequential(int n) {
