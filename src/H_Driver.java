@@ -38,7 +38,9 @@ public class H_Driver {
 		System.out.println();
 		
 		insertRandom(LIST_SIZE + 1);
+		printData();
 		deleteTest(generatePokemon());
+		printData();
 	}
 
 	public static void printData() {
