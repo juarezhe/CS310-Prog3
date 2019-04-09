@@ -2,107 +2,105 @@ import data_structures.*;
 
 public class H_Driver {
 	private static PriorityQueue<Pokemon> priorityQueue;
-	private static final int LIST_SIZE = 4000000;
+	private static final int LIST_SIZE = 1000000;
+	private static long START_TIME, END_TIME;
+	private static Pokemon TEST_MON = new Pokemon(1);
 
 	public static void main(String[] args) {
 		priorityQueue = new BinaryHeapPriorityQueue<Pokemon>(LIST_SIZE);
 
-		printStuff();
-		System.out.println("Contain:" + priorityQueue.contains(new Pokemon(1)));
+		printData();
+		System.out.println("Contain:" + priorityQueue.contains(TEST_MON));
 		System.out.println("Remove:\t" + priorityQueue.remove());
 		System.out.println();
+
+		insertSequential(9);
+		insertSequential(3);
+		printContents();
+		emptyWithRemove();
 		
-		addPokemon(9);
-		addPokemon(3);
-		deleteTest(2);
-		//emptyWithRemove();
-		printStuff();
-		System.out.println("Remove:\t" + priorityQueue.remove());
+		insertSequential(9);
+		insertSequential(3);
+		deleteTest(new Pokemon(2));
+		printContents();
 		System.out.println();
 		
-		addPokemon(3);
+		printData();
+		System.out.println("Contain:" + priorityQueue.contains(TEST_MON));
+		System.out.println("Remove:\t" + priorityQueue.remove());
+		System.out.println();
+
+		insertSequential(3);
 		priorityQueue.clear();
-		printStuff();
-		System.out.println();
-		
-		System.out.println("Contain:" + priorityQueue.contains(new Pokemon(1)));
+		printData();
+		System.out.println("Contain:" + priorityQueue.contains(TEST_MON));
 		System.out.println("Remove:\t" + priorityQueue.remove());
 		System.out.println();
-		bigTest();
-	}
-	
-	public static Pokemon generatePokemon() {
-		return new Pokemon((int) (Math.random() * (Pokemon.LAST_POKEMON - 1) + 1));
-	}
-	
-	public static void bigTest() {
-		long startTime = System.nanoTime();
-		for (int i = 0; i < LIST_SIZE; i++)
-			priorityQueue.insert(generatePokemon());
-		long endTime   = System.nanoTime();
-		long totalTime = endTime - startTime;
-		System.out.println("Runtime for insert: " + totalTime / 1000000);
 		
-		printStuff();
-		System.out.println();
-		
-		bigDelete(generatePokemon());
-		printStuff();
+		insertRandom(LIST_SIZE + 1);
+		deleteTest(generatePokemon());
 	}
-	
-	public static void printStuff() {
+
+	public static void printData() {
 		System.out.println("Size:\t" + priorityQueue.size());
 		System.out.println("Empty:\t" + priorityQueue.isEmpty());
 		System.out.println("Full:\t" + priorityQueue.isFull());
 		System.out.println("Peek:\t" + priorityQueue.peek());
 	}
 
-	public static void addPokemon(int n) {
-		for (int i = n; i > 0; i--) {
+	public static void insertSequential(int n) {
+		START_TIME = System.nanoTime();
+		for (int i = n; i > 0; i--)
 			priorityQueue.insert(new Pokemon(i));
-			for (Object curr : priorityQueue) {
-				System.out.println(curr.toString());
-				// System.out.println(curr);
-			}
-			System.out.println();
-		}
+		END_TIME = System.nanoTime();
+		System.out.println("Insert runtime (each, in ns): " + (END_TIME - START_TIME) / n);
+		System.out.println();
 	}
-
+	
+	public static void insertRandom(int n) {
+		START_TIME = System.nanoTime();
+		for (int i = n; i > 0; i--)
+			priorityQueue.insert(generatePokemon());
+		END_TIME = System.nanoTime();
+		System.out.println("Insert runtime (each, in ns): " + (END_TIME - START_TIME) / n);
+		System.out.println();
+	}
+	
+	public static void printContents() {
+		START_TIME = System.nanoTime();
+		for (Object curr : priorityQueue) {
+			System.out.println(curr);
+		}
+		END_TIME = System.nanoTime();
+		System.out.println("Iterate runtime (in ms): " + (END_TIME - START_TIME) / 1000000);
+		System.out.println();
+	}
+	
 	public static void emptyWithRemove() {
+		int removeCount = 0;
+		START_TIME = System.nanoTime();
 		while (priorityQueue.size() > 0) {
 			System.out.println("Remove:\t" + priorityQueue.remove());
-			for (Object curr : priorityQueue) {
-				System.out.println(curr.toString());
-				// System.out.println(curr);
-			}
-			System.out.println();
+			removeCount++;
 		}
-	}
-	
-	public static void deleteTest(int num) {
-		System.out.println("Contain:" + priorityQueue.contains(new Pokemon(num)));
-		System.out.println("Delete:\t" + priorityQueue.delete(new Pokemon(num)));
-		for (Object curr : priorityQueue) {
-			System.out.println(curr.toString());
-			// System.out.println(curr);
-		}
+		END_TIME = System.nanoTime();
+		System.out.println("Remove runtime (each, in ns): " + (END_TIME - START_TIME) / removeCount);
 		System.out.println();
 	}
-	
-	public static void bigDelete(Pokemon mon) {
-		System.out.println(mon);
-		long startTime = System.nanoTime();
+
+	public static Pokemon generatePokemon() {
+		return new Pokemon((int) (Math.random() * (Pokemon.LAST_POKEMON - 1) + 1));
+	}
+
+	public static void deleteTest(Pokemon mon) {
+		START_TIME = System.nanoTime();
 		System.out.println("Contain:" + priorityQueue.contains(mon));
-		long endTime   = System.nanoTime();
-		long totalTime = endTime - startTime;
-		System.out.println("Runtime for contains: " + totalTime / 1000000);
-		System.out.println();
+		END_TIME = System.nanoTime();
+		System.out.println("Contains runtime (in ms): " + (END_TIME - START_TIME) / 1000000);
 		
-		startTime = System.nanoTime();
+		START_TIME = System.nanoTime();
 		System.out.println("Delete:\t" + priorityQueue.delete(mon));
-		endTime   = System.nanoTime();
-		totalTime = endTime - startTime;
-		System.out.println("Runtime for delete: " + totalTime / 1000000);
-		System.out.println();
+		END_TIME = System.nanoTime();
+		System.out.println("Delete runtime (in ms): " + (END_TIME - START_TIME) / 1000000);
 	}
 }

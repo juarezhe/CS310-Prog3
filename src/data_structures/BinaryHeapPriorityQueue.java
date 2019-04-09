@@ -6,7 +6,7 @@
  * Contains code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
  * 
  * CS-310
- * 8 April 2019
+ * 9 April 2019
  * @author Hannah Juarez cssc1481
  */
 
@@ -72,42 +72,42 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		int parentIndex = (newIndex - 1) / 2;
 		Wrapper<E> newValue = this.storage[newIndex];
 
-		while (parentIndex >= 0 && newValue.compareTo(this.storage[parentIndex]) < 0) {
+		while (newIndex != parentIndex && newValue.compareTo(this.storage[parentIndex]) < 0) {
 			this.storage[newIndex] = this.storage[parentIndex];
 			newIndex = parentIndex;
-			this.storage[newIndex] = newValue;
 			parentIndex = (parentIndex - 1) / 2;
 		}
+		this.storage[newIndex] = newValue;
 	}
 
 	// Maintains min-heap order by sorting the replacement element toward the back
 	// based on priority and time in queue
 	// Code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
-	private void trickleDown(int startingIndex) {
+	private void trickleDown(Wrapper<E>[] heap, int startingIndex, int heapSize) {
 		int currentIndex = startingIndex;
-		int smallestChildIndex = getSmallestChild(currentIndex);
-		Wrapper<E> valueToSort = this.storage[currentIndex];
+		int childIndex = getSmallestChild(heap, currentIndex, heapSize);
+		Wrapper<E> valueToSort = heap[currentIndex];
 
-		while (smallestChildIndex != -1 && valueToSort.compareTo(this.storage[smallestChildIndex]) > 0) {
-			this.storage[currentIndex] = this.storage[smallestChildIndex];
-			currentIndex = smallestChildIndex;
-			this.storage[currentIndex] = valueToSort;
-			smallestChildIndex = getSmallestChild(currentIndex);
+		while (childIndex != -1 && valueToSort.compareTo(heap[childIndex]) > 0) {
+			heap[currentIndex] = heap[childIndex];
+			currentIndex = childIndex;
+			childIndex = getSmallestChild(heap, currentIndex, heapSize);
 		}
+		heap[currentIndex] = valueToSort;
 	}
 
 	// Returns the index of the smallest child or -1 if no children
 	// Code adapted from "Lecture Notes & Supplementary Material" by Riggins, Alan
-	private int getSmallestChild(int parentIndex) {
+	private int getSmallestChild(Wrapper<E>[] heap, int parentIndex, int heapSize) {
 		int leftChild = 2 * parentIndex + 1;
 		int rightChild = leftChild + 1;
 
-		if (rightChild < this.currentSize) { // two children
-			if (this.storage[leftChild].compareTo(storage[rightChild]) < 0)
+		if (rightChild < heapSize) { // two children
+			if (heap[leftChild].compareTo(heap[rightChild]) < 0)
 				return leftChild; // left child is smaller
 			return rightChild; // right child is smaller
 		}
-		if (leftChild < this.currentSize) // one child
+		if (leftChild < heapSize) // one child
 			return leftChild;
 		return -1; // no children
 	}
@@ -142,7 +142,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		this.storage[index] = this.storage[this.currentSize - 1];
 		this.modificationCounter++;
 		this.currentSize--;
-		trickleDown(index);
+		trickleDown(this.storage, index, this.currentSize);
 		return (E) itemToReturn;
 	}
 
@@ -255,31 +255,38 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 	// IteratorHelper class allows for tracking of changes since Iterator creation.
 	// Operates in fail-fast mode.
 	private class IteratorHelper implements Iterator<E> {
-		private int iterIndex;
+		private int iterIndex, auxSize;
 		private long stateCheck;
-		// private Wrapper<E>[] auxiliary;
+		private Wrapper<E>[] auxiliary;
 
-		// @SuppressWarnings("unchecked")
+		@SuppressWarnings("unchecked")
 		public IteratorHelper() {
-			this.iterIndex = 0;
 			this.stateCheck = modificationCounter;
-			// this.auxiliary = new Wrapper[currentSize];
-			// sortToAux(0);
+			this.auxSize = currentSize;
+			this.iterIndex = this.auxSize - 1;
+			this.auxiliary = new Wrapper[this.auxSize];
+			for (int i = 0; i < currentSize; i++)
+				this.auxiliary[i] = storage[i];
+			sort();
 		}
-		/**
-		private void sortToAux(int idx) {
-			this.auxiliary[idx] = storage[idx];
-			
-			int leftCompare = storage[idx].compareTo(storage[2 * idx + 1]);
-			int rightCompare = storage[idx].compareTo(storage[2 * idx + 2]);
-		}**/
+
+		private void sort() {
+			Wrapper<E> tmp;
+
+			while (this.auxSize > 0) {
+				tmp = this.auxiliary[0];
+				this.auxiliary[0] = this.auxiliary[this.auxSize - 1];
+				this.auxiliary[this.auxSize - 1] = tmp;
+				trickleDown(this.auxiliary, 0, --this.auxSize);
+			}
+		}
 
 		// Returns true if the list has a next item, false if not
 		@Override
 		public boolean hasNext() {
 			if (this.stateCheck != modificationCounter)
 				throw new ConcurrentModificationException();
-			return this.iterIndex < currentSize;
+			return this.iterIndex >= 0;
 		}
 
 		// If the list has a next item, that item is returned
@@ -287,7 +294,7 @@ public class BinaryHeapPriorityQueue<E extends Comparable<E>> implements Priorit
 		public E next() {
 			if (!hasNext())
 				throw new NoSuchElementException();
-			return (E) storage[this.iterIndex++].data;
+			return (E) this.auxiliary[this.iterIndex--].data;
 		}
 
 		// Unsupported operation for fail-fast iterator

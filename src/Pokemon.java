@@ -1,7 +1,7 @@
-import java.time.LocalTime;
 
 public class Pokemon implements Comparable<Pokemon> {
 	public static final int LAST_POKEMON = 809;
+	private static long POKEMON_COUNT = 0;
 	private static final String[] POKEMON_NAMES = { null, "Bulbasaur", "Ivysaur", "Venusaur", "Charmander",
 			"Charmeleon", "Charizard", "Squirtle", "Wartortle", "Blastoise", "Caterpie", "Metapod", "Butterfree",
 			"Weedle", "Kakuna", "Beedrill", "Pidgey", "Pidgeotto", "Pidgeot", "Rattata", "Raticate", "Spearow",
@@ -92,9 +92,8 @@ public class Pokemon implements Comparable<Pokemon> {
 			"Tapu Koko", "Tapu Lele", "Tapu Bulu", "Tapu Fini", "Cosmog", "Cosmoem", "Solgaleo", "Lunala", "Nihilego",
 			"Buzzwole", "Pheromosa", "Xurkitree", "Celesteela", "Kartana", "Guzzlord", "Necrozma", "Magearna",
 			"Marshadow", "Poipole", "Naganadel", "Stakataka", "Blacephalon", "Zeraora", "Meltan", "Melmetal" };
-	private int mNumber;
+	private int mNumber, mUniqueID;
 	private String mName;
-	private LocalTime mBirthdate;
 
 	/*
 	 * Constructor - creates new Pokemon using National Pokedex number
@@ -104,7 +103,7 @@ public class Pokemon implements Comparable<Pokemon> {
 			throw new RuntimeException("No such Pokemon.");
 		this.mNumber = number;
 		this.mName = POKEMON_NAMES[number];
-		this.mBirthdate = LocalTime.now();
+		this.mUniqueID = (int) ++POKEMON_COUNT;
 	}
 
 	/*
@@ -120,7 +119,7 @@ public class Pokemon implements Comparable<Pokemon> {
 			throw new RuntimeException("No such Pokemon.");
 		this.mNumber = idx;
 		this.mName = POKEMON_NAMES[idx];
-		this.mBirthdate = LocalTime.now();
+		this.mUniqueID = (int) ++POKEMON_COUNT;
 	}
 
 	/*
@@ -132,7 +131,7 @@ public class Pokemon implements Comparable<Pokemon> {
 	 */
 	@Override
 	public String toString() {
-		return "[" + this.mNumber + "-" + this.mName + " " + this.mBirthdate + "]";
+		return "[" + this.mNumber + "-" + this.mName + " " + this.mUniqueID + "]";
 	}
 
 	@Override
