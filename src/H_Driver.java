@@ -100,10 +100,12 @@ public class H_Driver {
 		System.out.println("Contain:" + priorityQueue.contains(mon));
 		END_TIME = System.nanoTime();
 		System.out.println("Contains runtime (in ms): " + (END_TIME - START_TIME) / 1000000);
+		System.out.println();
 		
 		START_TIME = System.nanoTime();
 		System.out.println("Delete:\t" + priorityQueue.delete(mon));
 		END_TIME = System.nanoTime();
 		System.out.println("Delete runtime (in ms): " + (END_TIME - START_TIME) / 1000000);
+		System.out.println();
 	}
 }
